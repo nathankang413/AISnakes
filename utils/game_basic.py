@@ -80,6 +80,9 @@ class Game:
             self.screen = pygame.display.set_mode((screen_size[0], screen_size[1]))
 
     def run_game(self):
+        """
+        Runs the main game loop
+        """
 
         num_frames = 0
 
@@ -106,6 +109,15 @@ class Game:
                 self.running = False
 
     def move_and_score(self):
+
+        """
+        Moves each snake and:
+        - adds points for each frame alive
+        - adds points for apples eaten
+
+        :return: True if both apples are dead
+        """
+
         dead = True
         for s in self.snakes:
             if s.alive:
@@ -133,18 +145,40 @@ class Game:
         return new_pos
 
     def get_snake_positions(self):
+
+        """
+        :return: the position of each scale of all snakes, including heads
+        """
+
         positions = []
         for s in self.snakes:
             positions += s.get_positions()
         return positions
 
     def find_screen_pos(self, pos):
+
+        """
+        Converts the tile coordinates to screen pixel coordinates
+
+        :param pos: tile coordinates
+        :return: screen pixel coordinates
+        """
+
         x_pos = (pos[0] - 1) * 20
         y_pos = (pos[1] - 1) * 20
         screen_pos = (x_pos, y_pos)
         return screen_pos
 
     def blit_text(self, text, color, pos):
+
+        """
+        Displays text on the screen
+
+        :param text: the text to display
+        :param color: an RGB tuple with the color to display
+        :param pos: the position of the text
+        """
+
         font = pygame.font.Font('freesansbold.ttf', 24)
         text = font.render(text, False, color)
         text_rect = text.get_rect()
@@ -152,14 +186,31 @@ class Game:
         self.screen.blit(text, text_rect)
 
     def in_board(self, pos):
+
+        """
+        :param pos: position of a tile
+        :return: True if pos is in the board
+        """
+
         return not (pos[0] < 1 or pos[0] > self.board_size[0]
                     or pos[1] < 1 or pos[1] > self.board_size[1])
 
     def reset_apple(self, apple_pos):
+
+        """
+        Removes the given apple and randomly generates a new one
+        :param apple_pos: the apple to be eaten
+        """
+
         self.apples.remove(apple_pos)
         self.apples.append(self.gen_apple())
 
     def check_deaths(self):
+
+        """
+        Checks death conditions for both snakes and updates snakes if necessary
+        """
+
         for s in self.snakes:
             snake_positions = self.get_snake_positions()
             snake_positions.remove(s.head_pos)
@@ -169,6 +220,11 @@ class Game:
                 s.alive = False
 
     def update_screen(self):
+
+        """
+        Updates all visual elements of the game
+        """
+
         # update background
         self.screen.blit(background, (0, 0))
 
@@ -196,6 +252,11 @@ class Game:
         pygame.display.flip()
 
     def decision_handle(self):
+
+        """
+        Detects and handles keyboard inputs
+        """
+
         for event in pygame.event.get():
             # check keystroke and change velocity
             if event.type == pygame.KEYDOWN:
